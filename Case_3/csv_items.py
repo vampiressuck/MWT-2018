@@ -1,8 +1,7 @@
-CHANGERS = ("SQRT", "LOG", "EXP")
-FUNSTUFF = ("STDDEV", "ARMA", "MEAN")
+CHANGERS = ("SQRT", "LOG", "SQR", "INV")
+FUNSTUFF = ("STDDEV", "ARMA")
 OPERATIONS = ("+", "-", "/", "*", "%")
-FACTORS = (#"VIX", "COPP", "3M_R", "US_TRY", "BIG_IX", "SMALL_IX", "SENTI", 
-	      "TEMP", "RAIN", "OIL", "1")
+FACTORS = ("VIX", "COPP", "3M_R", "US_TRY", "BIG_IX", "SMALL_IX", "SENTI", "TEMP", "RAIN", "OIL", "1")
 TICKERS = ("industry", "market_cap", "pb", "returns")
 MAX_DELAY = 4
 
@@ -15,22 +14,30 @@ def build_init(signals):
 		else:
 			for delay in range(MAX_DELAY + 1):
 				if delay == 0:
-					delay_str = "t"
+					pass
+					#delay_str = "t"
 				else: 
 					delay_str = "t-{}".format(str(delay))
+					str1 = factor + "_{}".format("{"+ delay_str + "}")
+					signals.append(str1)
+					print(str1)
+	for factor in TICKERS:
+		for delay in range(MAX_DELAY + 1):
+			if delay != 0:
+				delay_str = "t-{}".format(str(delay))
 				str1 = factor + "_{}".format("{"+ delay_str + "}")
 				signals.append(str1)
 				print(str1)
 
 	# add basic ops
-	build_ops(signals)
+	#build_ops(signals)
 
 	# add changers
 	temp_list = []
 	for factor in signals:
 		for chg in CHANGERS:
-				str1 = chg + "({})".format(factor)
-				temp_list.append(str1)
+			str1 = chg + "({})".format(factor)
+			temp_list.append(str1)
 	for str1 in temp_list:
 		signals.append(str1)
 		print(str1)
@@ -66,5 +73,4 @@ def build_fun(signals):
 if __name__ == "__main__":
 	signals = []
 	build_init(signals)
-	build_ops(signals)
 	build_fun(signals)
